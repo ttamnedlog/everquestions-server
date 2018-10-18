@@ -11,8 +11,8 @@ sub EVENT_DEATH_COMPLETE{
  if($random_result<85){
   quest::spawn2($b,6,0,-974.5,436.4,-343.8,58);
   #quest::say("spawn shaman");
-  }elsif($random_result<95){
-  quest::spawn2($c,6,0,-974.5,436.4,-343.8,58);
+  # }elsif($random_result<95){
+  # quest::spawn2($c,6,0,-974.5,436.4,-343.8,58);
   #quest::say("spawn Fabled");
   }else{
     #quest::say("Spawning Bilge Farfathom");

@@ -282,12 +282,59 @@ end
 ]]--
 
 function event_level_up(e)
-  local free_skills =  {0,1,2,3,4,5,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,28,29,30,31,32,33,34,36,37,38,39,41,42,43,44,45,46,47,49,51,52,54,67,70,71,72,73,74,76};
 
-  for k,v in ipairs(free_skills) do
-    if ( e.self:MaxSkill(v) > 0 and e.self:GetRawSkill(v) < 1 and e.self:CanHaveSkill(v) ) then 
-      e.self:SetSkill(v, 1);
-    end
-      
-  end
+	-- All skills except caster specializations
+	local skills = { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9,
+			10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+			20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+			30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
+			40, 41, 42,                     48, 49,
+			50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
+			60, 61, 62, 63, 64, 65, 66, 67, 68, 69,
+			70, 71, 72, 73, 74, 75, 76 };
+
+	-- Determine max possible skill and assign it at each level up
+	for k,v in ipairs(skills) do
+		local max_skill = e.self:MaxSkill(v);
+		local raw_skill = e.self:GetRawSkill(v);
+		local can_have = e.self:CanHaveSkill(v);
+		if ( max_skill > 0 and raw_skill < max_skill and can_have ) then
+			e.self:SetSkill(v, max_skill);
+		end
+	end
+
+	-- Determine if client is a caster and can specialize
+	if ( e.self:CanHaveSkill(43) ) then
+
+		-- Specialization skills
+		local special = { 43, 44, 45, 46, 47 };
+		-- Create tables of raw skills and max skills
+		local raw_skills = {};
+		local max_skills = {};
+		for k,v in ipairs(special) do
+			raw_skills[k] = e.self:GetRawSkill(v);
+			max_skills[k] = e.self:MaxSkill(v);
+		end
+
+		-- Check each specialization and determine what to do
+		for k,v in ipairs(special) do
+			if ( raw_skills[k] == 50 ) then
+				-- do nothing
+			elseif ( raw_skills[k] > 50 and raw_skills[k] < max_skills[k] ) then
+				e.self:SetSkill(v, max_skills[k]);
+			elseif ( raw_skills[k] < 50 and raw_skills[k] < max_skills[k] ) then
+				if ( max_skills[k] <= 50 ) then
+					e.self:SetSkill(v, max_skills[k]);
+				else
+					e.self:SetSkill(v, 50);
+				end
+			end
+		end
+	end
+
+	-- Scribe all spells up to current level
+	-- eq.scribe_spells(e.self:GetLevel());
+
+	-- Train all disciplines up to current level
+	-- eq.train_discs(e.self:GetLevel());
 end
