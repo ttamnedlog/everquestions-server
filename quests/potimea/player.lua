@@ -56,6 +56,8 @@ function event_click_door(e)
 			eq.set_global(instance_id.."_potimeb_status","Phase1",7,"H13");
 			if (raid.valid) then
 				eq.assign_raid_to_instance(instance_id);
+			elseif (e.self:Admin() > 80) then
+				eq.assign_to_instance(instance_id);
 			end
 		end
 		
