@@ -19,7 +19,7 @@ function event_click_door(e)
 	-- make sure the player_list is clear
 	player_list = nil;
 	player_list_count = nil;
-	if ((door_id >= 8 and door_id <=12) and (raid.valid or e.self:Admin() > 80)) then
+	if ((door_id >= 8 and door_id <=12) and (raid.valid or (e.self:Admin() > 80 and e.self:GetGM()))) then
 		-- determine if the player is in an instance already
 		local instance_id = eq.get_instance_id("potimeb",0);
 		-- should never be nil, but just in case.
@@ -56,7 +56,7 @@ function event_click_door(e)
 			eq.set_global(instance_id.."_potimeb_status","Phase1",7,"H13");
 			if (raid.valid) then
 				eq.assign_raid_to_instance(instance_id);
-			elseif (e.self:Admin() > 80) then
+			elseif (e.self:Admin() > 80 and e.self:GetGM()) then
 				eq.assign_to_instance(instance_id);
 			end
 		end

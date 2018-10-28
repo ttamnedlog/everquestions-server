@@ -18,3 +18,4 @@ queryserv
 ucs
 eqemu_config.json
 login.ini
+database_dumper.pl
